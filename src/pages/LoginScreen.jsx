@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
+//Para usar reducer
+import {useDispatch} from 'react-redux'
+import {addAuth} from '../slice/authSlice'
 
 import GoogleLogin from "react-google-login";
 
 const LoginScreen = () => {
   let navigate = useNavigate();
+  const dispatch = useDispatch()
+  
+  useEffect(() => {
+  
+    const user = JSON.parse(localStorage.getItem('user')) || null
+    if(user){
+      navigate('/')
+    }
+
+
+  }, [navigate])
+
 
   const responseGoogle = (response) => {
     console.log(response);
@@ -22,6 +38,7 @@ const LoginScreen = () => {
       };
 
       localStorage.setItem("user", JSON.stringify(user));
+      dispatch(addAuth(user))
       navigate("/");
     }
   };
